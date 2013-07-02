@@ -45,8 +45,6 @@ while ((tChange > delta || rChange > delta) && (iters <= maxIters))
     subsetIndex=1;
     found=0;
     for i=1:m
-        % (1) implement function at line 144:
-        % TODO
         tmpCP = getClosestPoints(tgtPts,transPts(:,i),dMax);
         % only attach those that have not been found yet:
         j=1;
@@ -91,16 +89,16 @@ while ((tChange > delta || rChange > delta) && (iters <= maxIters))
     % distances
     if (dMean < D)              % reg is quite good
         disp('The registration is quite good');
-        % TODO
+        dMax = dMean * 3*dDev;
     elseif (dMean < 3*D)        % reg is still good
         disp('The registration is still good');
-        % TODO
+        dMax = dMean * 2*dDev;
     elseif (dMean < 6*D)        % reg is not too bad
         disp('The registration is not too bad');
-        % TODO
+        dMax = dMean * dDev;
     else                        % reg is really bad
         disp('The registration is really bad');
-        % TODO
+        dMax = dMean;
     end      
     % now, delete all points from the list which are not within the
     % specified distance dMax
@@ -132,8 +130,8 @@ while ((tChange > delta || rChange > delta) && (iters <= maxIters))
     % (3) compute the motion of the subset of the source points
     % (sourcePtsSS) and the set of closest points (CP). Save the
     % transformation in T
-    % TODO
-    
+
+    T = pointBasedRegistration(srcPtsSS, CP);
     R = T(1:3,1:3);
     q = DCM2Quat(R);
     qAngle = 2 * acos(q(4));
@@ -147,8 +145,10 @@ while ((tChange > delta || rChange > delta) && (iters <= maxIters))
     
     %(iv) (4) apply motion to all points in template (src)
     % save the transformed Pts in transPts
-    % TODO
-
+    srcPts(4,:) = 1;
+    transPts = T * srcPts; %+t?
+    transPts = transPts(1:3,:);
+    srcPts = srcPts(1:3,:);
   end %while
 end
 
@@ -157,8 +157,15 @@ function cp = getClosestPoints(pts, pt, d)
 % pts (3xN) which has a distance less or equal
 % to distance d from point pt. Save result
 % in cptmp!
-% TODO
 %sort in ascending order:
+cptmp = [];
+for i=1:size(pts, 2)
+    p = pts(:,i);
+    dist = sqrt(sum((p-pt).^2));
+    if(dist<=d)
+        cptmp(:, end+1) = p;
+    end
+end
 cp=qs(cptmp, pt);
 end
 
