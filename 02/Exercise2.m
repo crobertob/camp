@@ -1,5 +1,4 @@
-%% Computer Aided Medical Procedures II - Summer 2012
-%% Filtering
+%% Computer Aided Medical Procedures II - Summer 2013
 %% Exercise 2: Basic filtering in the frequency domain
 
 clear all; 
@@ -25,19 +24,23 @@ for D0 = [100, 25, 50, 75]
     %% Create the transfert function H_ilpf(D0)
     for i = 1:size(SLn,1)
         for j = 1:size(SLn,2)
-            ?????
-            ?????
-            H_ilpf(i,j) =  ?????
+            D = sqrt((i-sx/2)^2 + (j-sy/2)^2);
+            if D <= D0
+                H_ilpf(i,j) = 1;
+            else
+                H_ilpf(i,j) = 0;
+            end
         end
     end
     %% Filter SLn using H_ilpf
-    SLn_f = ???????
+    SLn_f = imfft(SLn).* H_ilpf;
+    SLn_f = imifft(SLn_f);
     %% Display the results
     figure(1);
     subplot(2,2,1);imagesc(SLn); axis image; colormap gray; axis off; ...
         title('Original Image')
     subplot(2,2,2);imagesc(H_ilpf); axis image; colormap gray; axis off; ...
-        title('Transfert function')
+        title('Transfer function')
     subplot(2,2,3);imagesc(SLn_f); axis image; colormap gray; axis off; ...
         title('Filtered Image')
     subplot(2,2,4);imagesc(SLn_f(1:200,201:400)); axis image; colormap gray;...
@@ -46,14 +49,14 @@ for D0 = [100, 25, 50, 75]
 end
 input('Continue?')
 
-%% 2. Repeat C.1. with D0 = 25,50,75. Comment the result
+% 2. Repeat C.1. with D0 = 25,50,75. Comment the result
 
-%%-----------------------------------------------------------------------%%
-%% D. Butterworth Low Pass Filter (BLPF)
-%% - Create the transfert function H_blpf of the BLPF with D0=50 and n = 2
-%% and apply it to the image by using the functions imfft and imifft.
-%% - Repeat with D0 = 50 and n = [1 2 5 10 15 20 25]. 
-%% - Comment the result.
+%-----------------------------------------------------------------------%%
+% D. Butterworth Low Pass Filter (BLPF)
+% - Create the transfert function H_blpf of the BLPF with D0=50 and n = 2
+% and apply it to the image by using the functions imfft and imifft.
+% - Repeat with D0 = 50 and n = [1 2 5 10 15 20 25]. 
+% - Comment the result.
 
 H_blpf = zeros(size(SLn));
 D0 =25; 
@@ -61,19 +64,19 @@ D0 =25;
 for n = [1 2 5 10 15 20 25]
     for i = 1:size(SLn,1)
         for j = 1:size(SLn,2)
-            ???????
-            ???????
-            H_blpf(i,j) = ???????
+            D = sqrt((i-sx/2)^2 + (j-sy/2)^2);
+            H_blpf(i,j) = 1/(1+(D/D0)^(2*n));
         end
     end
     %% Filtered SLn using H_blpf
-    SLn_f = ???????
+    SLn_f = imfft(SLn).*H_blpf;
+    SLn_f = imifft(SLn_f);
     %% Display the results
     figure(1);
     subplot(2,2,1);imagesc(SLn); axis image; colormap gray; axis off; ...
         title('Original Image')
     subplot(2,2,2);imagesc(H_blpf); axis image; colormap gray; axis off; ...
-        title('Transfert function')
+        title('Transfer function')
     subplot(2,2,3);imagesc(SLn_f); axis image; colormap gray; axis off; ...
         title('Filtered Image')
     subplot(2,2,4);imagesc(SLn_f(1:200,201:400)); axis image; colormap gray;...
