@@ -1,15 +1,15 @@
-%% Computer Aided Medical Procedures II - Summer 2012
+%% Computer Aided Medical Procedures II - Summer 2013s
 %% Filtering
 %% Exercise 3: Advanced filtering: anisotropic diffusion
 
-clear all; close all; 
+clear all; close all;
 
 %%-----------------------------------------------------------------------%%
 %% A. Create the shape logan phantom 512x512 (function phantom)
 %% And add some normal noise
 sx = 512; sy = 512; % Size of the image
 SL = phantom(sx,sy);
-SLn = ???????
+SLn = SL + (0.25.*randn(sx, sy));
 
 % Make copies for all different outcomes
 I_heateq = SLn;
@@ -34,29 +34,31 @@ for i = 1:steps
     
     %%% Isotropic diffusion filter
     % 1. compute right hand side of heat equation using grad and div
-    D_heateq =  ???????
+    [dxu, dyu]= grad(I_heateq);
+    D_heateq =  div(dxu,dyu);
     % 2. forward Euler step for heat equation (see equation (3))
-    I_heateq =  ???????
+    I_heateq =  I_heateq + tau*D_heateq;
     
     %%% Anisotropic diffusion filter
     % 1. Compute right hand side of the gradient
-    [dxI_edge dyI_edge] = ???????
+    [dxI_edge, dyI_edge] = grad(I_edge);
     % 2. Compute diffusion coefficient (see equation (5))
     % i. Filter the image with the gaussian  filter G_edge
-    I_edge_smooth = ???????
+    I_edge_smooth = convn(I_edge, G_edge);
     % ii. Compute the respective gradient magnitude
-    Mag = ???????
+    Mag = sqrt(dxI_edge.^2+dyI_edge.^2);
     % iii. Compute the diffusion coefficient
-    g   = ???????
+    %g   = 1./(1+(Mag/sigma)^2);
+    g   = exp(-(Mag.^2/sigma^2));
     % 2. Get the modified Laplacian
-    D_edge = ???????
+    D_edge = div(g .* dxI_edge, g .* dyI_edge);
     % 3. forward Euler step for heat equation
-    I_edge = ???????
+    I_edge = I_edge + tau * D_edge;
     
     %%% Iterative median filter
     % 2. Filter the image I_median with a median filter of size 5x5 (imfilt2)
-    I_median = ???????
-        
+    I_median = medfilt2(I_median, [5 5]);
+    
     %%% Display
     if mod(i,10)==1
         figure(1);
