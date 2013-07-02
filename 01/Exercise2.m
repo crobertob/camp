@@ -1,4 +1,4 @@
-%% Computer Aided Medical Procedures II - Summer 2012
+%% Computer Aided Medical Procedures II - Summer 2013
 %% Exercise Sheet 1
 %% Exercise 2: Basic image processing
 
