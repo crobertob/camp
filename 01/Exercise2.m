@@ -17,31 +17,36 @@ im = imread('mrihead.jpg');
 imshow(im);
 
 mriFig = figure('Name', 'MRI','NumberTitle','off');
-axis([0 256 0 256]);
-imagesc(im);
+imagesc(1:175, 1:225,im);
+axis([0 225 0 225]);
+axis off;
 colormap('Gray');
 
 % c) Now visualize only the upper left quarter of the image in the range [100,150].
 mriUL = figure('Name', 'MRI UL','NumberTitle','off');
-imagesc([0 256],[0 256],im);
-axis([0 100 0 150]);
+imagesc(1:350,1:450,im);
+axis([0 225 0 225]);
+axis off;
 colormap('Gray');
+
 
 % d) The MATLAB image processing toolbox provides you with some functions
 % for histogram equalization which can improve the contrast of the image.
 %     Use the function adapthisteq in order improve the contrast of your image.
 mriHist = figure('Name', 'MRI with adapthisteq','NumberTitle','off');
-axis([0 256 0 256]);
-imagesc(adapthisteq(im));
+imagesc(1:175, 1:225,adapthisteq(im));
+axis([0 225 0 225]);
+axis off;
 colormap('Gray');
 
 % e) Unfortunately the histogram equalization enhances also the noise. 
 % Find out how to smooth your images with a Gaussian filter by typing help 
 % imfilter. Don’t forget to use to option ’replicate’.
 mriFilt = figure('Name', 'Filtered MRI','NumberTitle','off');
-axis([0 256 0 256]);
 filter = fspecial('gaussian', [4 4], 1);
-imagesc(imfilter(adapthisteq(im), filter ,'replicate'));
+imagesc(1:175, 1:225, imfilter(adapthisteq(im), filter ,'replicate'));
+axis([0 225 0 225]);
+axis off;
 colormap('Gray');
 
 % f) Open a new figure and visualize the difference between the original image
@@ -49,6 +54,7 @@ colormap('Gray');
 origImage = double(im);
 newImage = double(imfilter(adapthisteq(im), filter));
 mriDiff = figure('Name', 'MRI Differences','NumberTitle','off');
-axis([0 256 0 256]);
-imagesc(origImage - newImage);
+imagesc(1:175, 1:225, origImage - newImage);
+axis([0 225 0 225]);
+axis off;
 colormap('Gray');
