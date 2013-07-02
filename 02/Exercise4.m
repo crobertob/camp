@@ -1,4 +1,4 @@
-%% Computer Aided Medical Procedures II - Summer 2012
+%% Computer Aided Medical Procedures II - Summer 2013
 %% Filtering
 %% Exercise 4
 %% Frangi filter
@@ -25,7 +25,7 @@ for i = 1:length(sigmas)
     
     % 1. Calculate the 2D hessian for the scale sigmas(i)
     %% ToDo: Fill Hessian2D
-    [Dxx,Dxy,Dyy] = ???????
+    [Dxx,Dxy,Dyy] = Hessian2D(I,sigmas(i));
     
     % Correct for scale
     Dxx = (sigmas(i)^2)*Dxx;
@@ -36,22 +36,24 @@ for i = 1:length(sigmas)
 
     % 2. Compute the similarity measures that make sense in 2D
     % and the corresponding vesselness measure
-    Rb  = ???????
-    S   = ???????
-    Vesselness = ???????
+    Rb  = Lambda1./Lambda2;
+    S   = sqrt(Lambda1.^2+Lambda2.^2);
+    Vesselness = exp(-Rb/(2*beta^2)) .* (ones(size(I))-exp(-S.^2/(2*c^2)));
     
     % 3. Set to Vesselness to 0 if Lambda2 is positive
     % and Store the results in the matrix AllScale
-    ???????
-    AllScale(:,:,i) = ???????
+    if Lambda2>0
+        Vesselness = 0;
+    end
+    AllScale(:,:,i) = Vesselness;
     
     figure(1); subplot(1,2,2); imagesc(Vesselness); axis image; colormap gray;axis off; title(sigmas(i));
     pause(0.1)
 end
 
-% 4. Which scale returns the higest vesselness value?
+% 4. Which scale returns the highest vesselness value?
 % Deduce the filtered image If
-If = ???????
+If = max(AllScale,[],3);
 
 % Display
 figure(1); subplot(1,2,2); imagesc(If); axis image; ...
