@@ -17,14 +17,16 @@ im = imread('mrihead.jpg');
 imshow(im);
 
 mriFig = figure('Name', 'MRI','NumberTitle','off');
-imagesc(1:175, 1:225,im);
-axis([0 225 0 225]);
-axis off;
+imagesc(im);
+axis image;
 colormap('Gray');
+axis off;
+
 
 % c) Now visualize only the upper left quarter of the image in the range [100,150].
 mriUL = figure('Name', 'MRI UL','NumberTitle','off');
 imagesc(1:350,1:450,im);
+axis image;
 axis([0 225 0 225]);
 axis off;
 colormap('Gray');
@@ -34,8 +36,8 @@ colormap('Gray');
 % for histogram equalization which can improve the contrast of the image.
 %     Use the function adapthisteq in order improve the contrast of your image.
 mriHist = figure('Name', 'MRI with adapthisteq','NumberTitle','off');
-imagesc(1:175, 1:225,adapthisteq(im));
-axis([0 225 0 225]);
+imagesc(adapthisteq(im));
+axis image;
 axis off;
 colormap('Gray');
 
@@ -44,8 +46,8 @@ colormap('Gray');
 % imfilter. Don’t forget to use to option ’replicate’.
 mriFilt = figure('Name', 'Filtered MRI','NumberTitle','off');
 filter = fspecial('gaussian', [4 4], 1);
-imagesc(1:175, 1:225, imfilter(adapthisteq(im), filter ,'replicate'));
-axis([0 225 0 225]);
+imagesc(imfilter(adapthisteq(im), filter ,'replicate'));
+axis image;
 axis off;
 colormap('Gray');
 
@@ -54,7 +56,7 @@ colormap('Gray');
 origImage = double(im);
 newImage = double(imfilter(adapthisteq(im), filter));
 mriDiff = figure('Name', 'MRI Differences','NumberTitle','off');
-imagesc(1:175, 1:225, origImage - newImage);
-axis([0 225 0 225]);
+imagesc(origImage - newImage);
+axis image;
 axis off;
 colormap('Gray');

@@ -1,4 +1,4 @@
-%% Computer Aided Medical Procedures II - Summer2012
+%% Computer Aided Medical Procedures II - Summer 2013
 %% Filtering
 
 %% Exercise 1: Basic filtering in the spatial domain
@@ -20,17 +20,17 @@ SLn = SL + 0.25 .* randn(512);
 %% And compare the output SLn_f to the original image
 disp('1.1 Average Smoothing')
 figure(1); subplot(2,2,1); imagesc(SL); axis image; ...
-    colormap gray; axis off; title('Original')
+    colormap('Gray'); axis off; title('Original')
 figure(1); subplot(2,2,2); imagesc(SLn); axis image; ...
-    colormap gray; axis off; title('Corrupted')
+    colormap('Gray'); axis off; title('Corrupted')
 for N = 1:5
     M_a = 1/((2*N+1)^2)*ones(2*N+1);   %% Average Mask
     SLn_a = convn(SLn, M_a);         %% Filtered SLn
     figure(1); 
     subplot(2,2,3); imagesc(SLn_a); axis image; ...
-        colormap gray; axis off; title(['Average Filter - N = ' num2str(N)]);
+        colormap('Gray'); axis off; title(['Average Filter - N = ' num2str(N)]);
     subplot(2,2,4); imagesc(SLn_a(101:200,101:200)); axis image; ...
-        colormap gray; axis off; title(['Average Filter - N = ' num2str(N)]);
+        colormap('Gray'); axis off; title(['Average Filter - N = ' num2str(N)]);
     pause(0.5)
 end
 input('Continue?')
@@ -41,10 +41,10 @@ disp('1.2 Gaussian Smoothing')
 for sigma = 1:10
     M_g     =  fspecial('gaussian', 3*sigma, sigma) ;     %% Gaussian Mask
     SLn_g   =  convn(SLn, M_g);     %% Filtered SLn
-    figure(1); subplot(2,2,3); imagesc(SLn_g); axis image; colormap gray; ...
+    figure(1); subplot(2,2,3); imagesc(SLn_g); axis image; colormap('Gray'); ...
         axis off; title(['Gaussian Filter - Std = ' num2str(sigma)])
     figure(1); subplot(2,2,4); imagesc(SLn_g(101:200,101:200)); axis image; ...
-        colormap gray; axis off; title(['Gaussian Filter - Std = ' num2str(sigma)])
+        colormap('Gray'); axis off; title(['Gaussian Filter - Std = ' num2str(sigma)])
     pause(0.5);
 end
 input('Continue?')
@@ -74,10 +74,10 @@ for sigma = 0:10
     Angle = atan(G_y./G_x);        %% Gradient Angle
     
     figure(2);
-    subplot(2,2,1); imagesc(G_x); axis image; colormap gray; axis off; title('Gx')
-    subplot(2,2,2); imagesc(G_y); axis image; colormap gray; axis off; title('Gy')
-    subplot(2,2,3); imagesc(Mag); axis image; colormap jet; axis off; title('Magnitude')
-    subplot(2,2,4); imagesc(Angle); axis image; colormap jet; axis off; title('Angle')
+    subplot(2,2,1); imagesc(G_x); axis image; colormap('Gray'); axis off; title('Gx');
+    subplot(2,2,2); imagesc(G_y); axis image; colormap('Gray'); axis off; title('Gy');
+    subplot(2,2,3); imagesc(Mag); axis image; colormap('Gray'); axis off; title('Magnitude');
+    subplot(2,2,4); imagesc(Angle); axis image; colormap('Gray'); axis off; title('Angle');
     pause(0.5)
 end
 input('Continue?')
@@ -89,11 +89,11 @@ input('Continue?')
 %% subplot(1,2,2) of figure(3);
 M_lap = [[0 1 0];[1 -4 1];[0 1 1]];          %% Laplacian Maks
 Lap = convn(SLn, M_lap);              %% Filter SLn
-figure(3); subplot(1,2,1); imagesc(Lap); axis image; colormap gray; axis off; title('Lap')
+figure(3); subplot(1,2,1); imagesc(Lap); axis image; colormap('Gray'); axis off; title('Laplacian')
 for k = 1:10
     M_log = fspecial('log', 3*k, k);  %% Log Mask 
     LoG = imfilter(Lap, M_log, 'symmetric', 'conv');          %% Filter SLn
-    figure(3); subplot(1,2,2); imagesc(LoG); axis image; colormap gray; axis off; title(['LoG' num2str(k)])
+    figure(3); subplot(1,2,2); imagesc(LoG); axis image; colormap('Gray'); axis off; title(['LoG' num2str(k)])
     pause(0.5);
 end
 disp('End Exercise 1')
