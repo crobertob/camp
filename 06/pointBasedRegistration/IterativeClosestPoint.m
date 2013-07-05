@@ -130,8 +130,8 @@ while ((tChange > delta || rChange > delta) && (iters <= maxIters))
     % (3) compute the motion of the subset of the source points
     % (sourcePtsSS) and the set of closest points (CP). Save the
     % transformation in T
-
     T = pointBasedRegistration(srcPtsSS, CP);
+
     R = T(1:3,1:3);
     q = DCM2Quat(R);
     qAngle = 2 * acos(q(4));
@@ -146,7 +146,7 @@ while ((tChange > delta || rChange > delta) && (iters <= maxIters))
     %(iv) (4) apply motion to all points in template (src)
     % save the transformed Pts in transPts
     srcPts(4,:) = 1;
-    transPts = T * srcPts; %+t?
+    transPts = T * srcPts;
     transPts = transPts(1:3,:);
     srcPts = srcPts(1:3,:);
   end %while
