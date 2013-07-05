@@ -98,7 +98,7 @@ while ((tChange > delta || rChange > delta) && (iters <= maxIters))
         dMax = dMean * dDev;
     else                        % reg is really bad
         disp('The registration is really bad');
-        dMax = dMean;
+        dMax = median(dist);
     end      
     % now, delete all points from the list which are not within the
     % specified distance dMax
