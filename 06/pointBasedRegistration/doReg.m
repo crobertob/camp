@@ -42,9 +42,7 @@ Ytilde= Y-Ymean*ones(size(Y(1,:)));
 % (4) compute covariance matrix of X,Y and get principal components:
 % call princ. comp. of X Rx 
 % and princ. comp. of Y Ry
-%[Rx Sx Vx] = svd(Xtilde*Xtilde')
 Rx = princomp(Xtilde*Xtilde');
-%[Ry Sy Vy] = svd(Ytilde*Ytilde')
 Ry = princomp(Ytilde*Ytilde');
 
 % transform:
