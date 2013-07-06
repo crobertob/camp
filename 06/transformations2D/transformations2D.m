@@ -34,12 +34,14 @@ figure(2);
 axis equal;
 hold on;
 
-% TODO: define 3x3 transformation matrix A1 that translates the point set
+% define 3x3 transformation matrix A1 that translates the point set
 % pnikolaus by (2,3)'
+A1 = eye(3);
+A1(1,3)=2;
+A1(2,3)=3;
 
-
-% TODO: transform the pnikolaus point set with the translation matrix A1
-nik1 = pnikolaus; %%
+% transform the pnikolaus point set with the translation matrix A1
+nik1 = A1*pnikolaus; %%
 
 % plot the original and the translated house in the same figure
 plot(p(1,:),p(2,:),'bx')
@@ -55,10 +57,12 @@ hold on;
 
 % TODO: define the 3x3 transformation matrix that rotates counter clockwise
 % with 45 degrees (pi/4)
-
+A2 = [ cos(pi/4) -sin(pi/4) 0; ...
+       sin(pi/4) cos(pi/4)  0; ...
+       0        0           1;]
 
 % TODO: transform the pnikolaus point set with the rotation matrix
-nik2 = pnikolaus; %%
+nik2 = A2* pnikolaus; %%
 
 % plot the original and the rotated house in the same figure
 plot(p(1,:),p(2,:),'bx')
@@ -68,14 +72,14 @@ plot(nik2(1,:),nik2(2,:),'g-')
 
 % -----
 % Concardinate the transformations in different orders
-% 1) first translation than rotation in world coordinates
+% 1) first translation then rotation in world coordinates
 figure(4);
 axis equal;
 hold on;
 
 % TODO: transform the pnikolaus point set where first the rotation A2 and
 % afterwards the translation A1 is performed in world coordinates
-nik3 = pnikolaus; %%
+nik3 = A1 * A2 * pnikolaus; %%
 
 plot(p(1,:),p(2,:),'bx')
 plot(pnikolaus(1,:),pnikolaus(2,:),'r.-')
@@ -89,7 +93,7 @@ hold on;
 
 % TODO: transform the pnikolaus point set where first the translation A1 and
 % afterwards the rotation A2 is performed in world coordinates
-nik4 = pnikolaus; %%
+nik4 = A2 * A1 * pnikolaus; %%
 
 plot(p(1,:),p(2,:),'bx')
 plot(pnikolaus(1,:),pnikolaus(2,:),'r.-')
@@ -104,10 +108,10 @@ hold on;
 % TODO: create one single matrix A3 that containts the above specified
 % rotation in the upper left 2x2 matrix and the translation specified above
 % in the first two rows of the last column
-
+A3 = (A1 + A2)-eye(3); 
 
 % TODO: transform the pnikolaus point set with the A3 matrix
-nik5 = pnikolaus; %%
+nik5 = A3 * pnikolaus; %%
 
 plot(p(1,:),p(2,:),'bx')
 plot(pnikolaus(1,:),pnikolaus(2,:),'r.-')
@@ -126,7 +130,7 @@ A4 = [1.6 0.1 1.5; ...
       0 0 1];
 
 % TODO: transform the pnikolaus point set with the affine A4 matrix  
-nik6 = pnikolaus; %%
+nik6 = A4 * pnikolaus; %%
 
 plot(p(1,:),p(2,:),'bx')
 plot(pnikolaus(1,:),pnikolaus(2,:),'r.-')
@@ -146,15 +150,14 @@ A5 = [1.6 0.1 1.5; ...
       0.2 0.3 1];
 
 %TODO: transform the points pnikolaus by the projective transformation A5
-nik7 = pnikolaus; %%
+nik7 = A5 * pnikolaus; %%
 
 for i=1:size(nik7,2)
 % TODO: normalize the points after the projective transformation. Each point
-% has to be devided by the entry in its third row. (to validate the result
+% has to be divided by the entry in its third row. (to validate the result
 % see if the last row is throughout all points 1)
-    
+    nik7(:,i) = nik7(:,i)/nik7(3,i);
 end
-
 
 plot(p(1,:),p(2,:),'bx')
 plot(pnikolaus(1,:),pnikolaus(2,:),'r.-')
