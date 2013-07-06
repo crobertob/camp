@@ -7,9 +7,11 @@ function [dx, dy] = denseField(points_x, points_y, T, method, N)
   
   % E2b) create the 'small versions' of T{1}.A and T{2}.A and save them in
   % T{1}.M and T{2}.M, respectively
-  T{1}.M = eye(3,3); %placeholder, replace this by correct formula
-  T{2}.M = eye(3,3); %placeholder, replace this by correct formula
-  
+  T{1}.M = real(logm(T{1}.A(1:2,1:2)))/N;
+  T{1}.M = expm(T{1}.M);
+  T{2}.M = real(logm(T{2}.A(1:2,1:2)))/N;
+  T{2}.M = expm(T{2}.M);
+
   dx = zeros( numel(points_x), numel(points_y) );
   dy = zeros( numel(points_x), numel(points_y) );
   
@@ -53,6 +55,7 @@ function pt = infinitesimallyTransformPoint(pt, T)
     c = T{i}.c;
     M = T{i}.M;
     % E2b): compute direction vector from M, c, pt and store them in vectors(:,i)
+    vectors(:,i)=M*(pt-c)-(pt-c);
   end
   [weight1, weight2] = weightsLinear(pt, T);
   pt = pt + weight1 * vectors(:,1) + weight2*vectors(:,2);
@@ -67,7 +70,16 @@ function [weight1, weight2] = weightsLinear(pt, T)
   % Note: Make sure that to handle the borders, i.e. if the point is 'left'
   % of T{1}.c weight1 should be 1 and weight2 should be 0. Analogously
   % treat the case where pt is 'right' of T{2}.
+
+  if pt(1) < T{1}.c(1)
+    weight1 = 1;
+    weight2 = 0;
+  elseif pt(1) > T{2}.c(1)
+    weight1 = 0;
+    weight2 = 1;
+  else
+      weight1 = (T{2}.c(1)-pt(1))/(T{2}.c(1)-T{1}.c(1));
+      weight2 = (pt(1)-T{1}.c(1))/(T{2}.c(1)-T{1}.c(1));
   
-  weight1=0; %placeholder, replace this by correct formula
-  weight2=0; %placeholder, replace this by correct formula
+  end
 end

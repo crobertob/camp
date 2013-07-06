@@ -23,15 +23,19 @@ clear all;
 I = imread('t1.tif');
 
 % measured stain colors in RGB space
-sH = rgb2od([133.87996, 124.53495, 195.26811]);
-sE = rgb2od([232.39385,  98.17126, 192.10144]);
+sH = rgb2od([133.87996, 124.53495, 195.26811])
+sE = rgb2od([232.39385,  1.17126, 192.10144])
 
 % E1b:
 % creation of M matrix
 % create a 3x3 matrix containing the normalized stain vectors
 % in its 1st 2 columns and a vector orthogonal to them in the 3rd column.
 M = eye(3,3);
-
+sR = cross(sH,sE);
+M(:, 1)= sH';
+M(:, 2)= sE';
+M(:, 3)= sR';
+M
 % rgb2od
 Iod = rgb2od(I);
 

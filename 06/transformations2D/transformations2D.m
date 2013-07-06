@@ -59,7 +59,7 @@ hold on;
 % with 45 degrees (pi/4)
 A2 = [ cos(pi/4) -sin(pi/4) 0; ...
        sin(pi/4) cos(pi/4)  0; ...
-       0        0           1;]
+       0        0           1];
 
 % TODO: transform the pnikolaus point set with the rotation matrix
 nik2 = A2* pnikolaus; %%
