@@ -12,16 +12,10 @@ function B = image_translate(A,t)
     % backward warping
     for xb=1:d1
         for yb=1:d2
-
-			%%% TODO
-			% calculate the correct indices for accessing matrix A
-            
-        
-        
+            xa = round(xb-t(1));
+            ya = round(yb-t(2));
             if ( xa>0 && ya>0 && xa<=d1 && ya<=d2 )
-			
                 B(xb,yb) = A( xa , ya );
-			end
-            
-        end
+            end
+         end
     end

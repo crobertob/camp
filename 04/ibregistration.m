@@ -22,7 +22,7 @@ img_fixed  = imread('crossF.bmp');
 
 % setup registration parameters
 initial_params     = [15 1 1];      % [angle translatex translatey]
-similarity_measure = 'SSD';         % SSD, SAD, NCC or MI
+similarity_measure = 'MI';         % SSD, SAD, NCC or MI
 iterSimplex = 0;
 
 % prepare plotting
@@ -94,8 +94,8 @@ disp(' ');
 %%% TODO:
 % apply resulting transformation to img_moving
 %   store result in "img_registered"
-
-
+img_registered = image_rotate(img_moving, angle, [0 0]);
+img_registered = image_translate(img_registered, [dx dy]);
 
 % display results
 figure;
