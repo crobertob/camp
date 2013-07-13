@@ -159,3 +159,53 @@ SNR = 10*log10(P_signal./MSE)
 %%%%%%%%%%%%%%%%%%
 % Part f
 %%%%%%%%%%%%%%%%%%
+% Read images
+Image_1 = imread('1.tif');
+Image_2 = imread('2.tif');
+Image_3 = imread('3.tif');
+
+%Calculate dice between image 1 and 2
+X = Image_1;
+B = Image_2;
+X=X(:);
+B=B(:);
+% Get number of voxels that intersect (mask with one and add up)
+common=sum(X & B & 1); 
+cm=sum(X & 1); % the number of voxels in m
+co=sum(B & 1); % the number of voxels in o
+Dice(1)=(2*common)/(cm+co);
+
+X = Image_2;
+B = Image_3;
+X=X(:);
+B=B(:);
+common=sum(X & B & 1); 
+cm=sum(X & 1); % the number of voxels in m
+co=sum(B & 1); % the number of voxels in o
+Dice(2)=(2*common)/(cm+co);
+
+X = Image_1;
+B = Image_3;
+X=X(:);
+B=B(:);
+common=sum(X & B & 1); 
+cm=sum(X & 1); % the number of voxels in m
+co=sum(B & 1); % the number of voxels in o
+Dice(3)=(2*common)/(cm+co);
+
+X = Image_1;
+B = Image_2;
+C = Image_3;
+X=X(:);
+B=B(:);
+C=C(:);
+common=sum(X & B & C & 1); 
+cm=sum(X & 1); % the number of voxels in m
+co=sum(B & 1); % the number of voxels in o
+cc=sum(C & 1);
+Dice(4)=(2*common)/(cm+co+cc);
+
+disp(['Dice between image 1 and 2: ' num2str(Dice(1))]);
+disp(['Dice between image 2 and 3: ' num2str(Dice(2))]);
+disp(['Dice between image 1 and 3: ' num2str(Dice(3))]);
+disp(['Dice between image 1 and 2 and 3: ' num2str(Dice(4))]);
