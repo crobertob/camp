@@ -23,23 +23,26 @@ list = [x, y];
 while(size(list,1)~=0)
     
     % Pick up and remove the first pixel from the list
-    ?????
+    pix = list(1,:);
+    list = list(2:size(list,1),:);
     
     % Check if pixel is homogeneous
     % By comparing it to the mean Intensity inside the region
     
-    if homogen???
-        ?????
-        ?????
+    if abs(I(pix(1),pix(2))-Im) <= T
+        Region(pix(1), pix(2))=1;
         for k = 1:8
-            ????
-            ????
+            pneigh = pix+neigb(k,:);
+            %check if neighbouring cells are in the boundaries
+            if pneigh(1)>0 && pneigh(2)>0 && pneigh(1)<=s1 && pneigh(2)<=s2
+                if Visited(pneigh(1),pneigh(2))~=1
+                    list=[list; pneigh];
+                    Visited(pneigh(1),pneigh(2))=1;
+                end
+            end
         end
-    else
-       ????
-       ????
     end
-    Im = ?????;
+    Im = mean(I(Region==1));
     
     if toc(t)>1/23
         imagesc(I+Region,[0 1]); axis image; colormap gray; axis off; axis xy;
