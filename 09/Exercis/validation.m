@@ -110,7 +110,7 @@ c     = 100;
 AllScale =zeros([size(I) length(sigmas)]);
 
 %% Display the original image
-figure(1); subplot(1,2,1); imagesc(I); axis image; colormap gray;axis off; title('Original');
+figure(3); subplot(1,2,1); imagesc(I); axis image; colormap gray;axis off; title('Original');
 
 % Frangi filter for all the scales sigma
 for i = 1:length(sigmas)
@@ -138,7 +138,7 @@ for i = 1:length(sigmas)
     end
     AllScale(:,:,i) = Vesselness;
     
-    figure(1); subplot(1,2,2); imagesc(Vesselness); axis image; colormap gray;axis off; title(sigmas(i));
+    figure(3); subplot(1,2,2); imagesc(Vesselness); axis image; colormap gray;axis off; title(sigmas(i));
     pause(0.1)
 end
 
@@ -147,7 +147,7 @@ end
 If = max(AllScale,[],3);
 
 % Display
-figure(1); subplot(1,2,2); imagesc(If); axis image; ...
+figure(3); subplot(1,2,2); imagesc(If); axis image; ...
     colormap gray;axis off; title('Frangi filter');
 
 %%Compute mean squared error
