@@ -1,7 +1,7 @@
 %   Random Walks for Image Segmentation - Example
 %   
 %   Author: Athanasios Karamalis
-%   Date: 08.05.2012
+%   Date: 08.05.2013
 %   CAMP II - Advanced Image Segmentation
 %
 %   Based on the paper:
@@ -46,7 +46,7 @@ end
 showSeeds(A,seeds,labels)
 
 % Solve random walks problem
-[ probabilities mask] = solveRw( A,seeds,labels,90);
+[probabilities mask] = solveRw( A,seeds,labels,90);
 
 % Show segmentation result
 showSegOutlineMorph( A, mask, 1 );
