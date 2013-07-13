@@ -12,9 +12,13 @@ clear;
 clc;
 
 % define parameters
-lambda = 0.01;
+% original
+% lambda = 0.01;
+% tau = 0.1;
 steps = 100;
+lambda = 0.05;
 tau = 0.1;
+
 
 % load image
 I = double(rgb2gray(imread('AAA.png'))+1)/256;
@@ -30,8 +34,8 @@ mu_2 = 0.2;
 for i = 1:steps
     
     % update mean values
-    % mu_1 = sum(u(:).*I(:))/(sum(u(:))+10*eps);
-    % mu_2 = sum((1-u(:)).*I(:))/(sum(1-u(:))+10*eps);
+     mu_1 = sum(u(:).*I(:))/(sum(u(:))+10*eps);
+     mu_2 = sum((1-u(:)).*I(:))/(sum(1-u(:))+10*eps);
     
     % compute gradient of the energy
     % 
@@ -40,6 +44,11 @@ for i = 1:steps
     %
     % HINT: Use the functions div and grad for computing the gradient of
     %       the regularizer!
+    [dxu, dyu]=grad(u);
+    v1 = dxu./(sqrt(dxu.^2 + dyu.^2) + 10*eps); %dxu/abs(grad(u))
+    v2 = dyu./(sqrt(dxu.^2 + dyu.^2) + 10*eps);
+    
+    grad_E = (I-mu_1).^2-(I-mu_2).^2-lambda.*div(v1,v2);
     
     % gradient descent step for u   
     u = u - tau*grad_E;
@@ -49,7 +58,7 @@ for i = 1:steps
     % re-project the function u as described on slide 41, equation (32).
     % 
     % HINT: This can be done in a single line of code!
-    
+    u=min(max(u,0),1);
     % visualize
     subplot(1,2,1)
     imagesc(I);

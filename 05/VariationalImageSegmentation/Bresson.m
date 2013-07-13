@@ -18,10 +18,13 @@ clear;
 clc;
 
 % define parameters
-lambda = 0.01;
+% Original
+% lambda = 0.01;
+% tau = 0.1;
 theta = 1.0;
 steps = 100;
 steps_fp = 5;
+lambda = 0.05;
 tau = 0.1;
 
 % load image
@@ -39,8 +42,8 @@ mu_2 = 0.2;
 for i = 1:steps
     
     % update constants
-    % mu_1 = sum(u(:).*I(:))/(sum(u(:))+10*eps);
-    % mu_2 = sum((1-u(:)).*I(:))/(sum(1-u(:))+10*eps);
+     mu_1 = sum(u(:).*I(:))/(sum(u(:))+10*eps);
+     mu_2 = sum((1-u(:)).*I(:))/(sum(1-u(:))+10*eps);
     
     % compute L2-gradient of data term
     grad_E = (I-mu_1).^2-(I-mu_2).^2;
