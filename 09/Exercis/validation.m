@@ -116,7 +116,6 @@ figure(1); subplot(1,2,1); imagesc(I); axis image; colormap gray;axis off; title
 for i = 1:length(sigmas)
     
     % 1. Calculate the 2D hessian for the scale sigmas(i)
-    %% ToDo: Fill Hessian2D
     [Dxx,Dxy,Dyy] = Hessian2D(I,sigmas(i));
     
     % Correct for scale
@@ -150,6 +149,12 @@ If = max(AllScale,[],3);
 % Display
 figure(1); subplot(1,2,2); imagesc(If); axis image; ...
     colormap gray;axis off; title('Frangi filter');
+
+%%Compute mean squared error
+MSE = mean2((double(I(:))-double(If(:))).^2);
+mu = mean2(double(I(:)));
+P_signal = mean2((double(I(:))-mu).^2); 
+SNR = 10*log10(P_signal./MSE)
 %%
 %%%%%%%%%%%%%%%%%%
 % Part f
