@@ -19,7 +19,8 @@ while any(m-m0)
     %% STEP 1: Assignment step: 
     %% Assign each pixel to the cluster whose mean is the nearest to its intensity
     for i = 1:length(I) % For every pixel in the image
-        c(i) = ?        % Assign the label c(i)
+        [value, idx] = min(abs(I(i)-m));
+        c(i) = idx;        % Assign the label c(i)
     end
     
     if iter ==1 %% %% Display initialization
@@ -40,7 +41,7 @@ while any(m-m0)
     
     %% STEP 2: Update step
     for k = 1:K     % For every class,
-        m(k)= ??    % compute the mean intensity in this class
+        m(k)= mean(I(c==k));  % compute the mean intensity in this class
     end
     
     %% Display the result

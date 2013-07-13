@@ -14,7 +14,7 @@ figure(1);imagesc(Image,[0 1]); axis image; colormap gray; axis xy; ...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Q0: Display the histogram of "Image", using hist (100 bins) 
-figure(2); ???????
+figure(2); hist(Image,100);
 
 input('1 - pause');
 close all
@@ -56,10 +56,10 @@ close all
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Q2: Preprocess the image with the simplest filter possible (Gaussian) of std = 1.5;
-Image_nf = ?? % Filtered version of "Image_n"
+Image_nf = convn(Image_n, fspecial('gaussian', 3, 1.5)); % Filtered version of "Image_n"
 figure(1);imagesc(Image_nf,[0 1]); axis image; colormap gray; axis xy
 figure(2);hist(Image_nf(:),100);axis ([0 1 0 3000]);
-figure(3);Image_nf_km = ?? % Apply the kmean algo to the filtered image
+figure(3);Image_nf_km = kmeans(Image,m); % Apply the kmean algo to the filtered image
 
 input('5 - pause')
 close all
@@ -68,7 +68,23 @@ close all
 %% Q3: Select the cluster corresponding to the lower brain vesicle
 %% Post process the image to remove false negatives and false positives
 %% after selecting the class to which the vesicles belong
-Image_PostProcess = ??
+shape = strel('line',3,0);
+
+I_seg = double(Image_nf_km==2); % cluster containing lower brain vesicle
+%cluster 1 contains outer part of the brain
+%cluster 2 contains vesicles
+%cluster 3 contains brain matter
+%cluster 4 contains inner part of the brain
+
+%opening (remove false positives)
+I_seg1 = imerode(I_seg,shape);
+I_seg2 = imdilate(I_seg1,shape);
+%closing (remove false negatives)
+I_seg3 = imdilate(I_seg2,shape);
+Image_PostProcess = imerode(I_seg3,shape);
+
+
+imshow(Image_PostProcess);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Q4: Compute the connected components of the binary image "Image_PostProcess"

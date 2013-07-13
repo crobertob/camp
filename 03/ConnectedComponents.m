@@ -10,29 +10,30 @@ for i=2:size(Image,1)
         if (Image(i,j)==1)
             %% Check the neihbourds at the top and at the left
             %% and assign their label to n1 and n2
-            n1 = ??
-            n2 = ??
+            n1 = Cluster(i-1,j);
+            n2 = Cluster(i,j-1);
             
             %% If one of them already belongs to a component, or if they
             %% belong to the same component, apply the label
             if ((n1>0)&&(n2==0))
-                ??
+                Cluster(i,j) = n1;
             elseif ((n2>0)&&(n1==0))
-                ??
+                Cluster(i,j) = n2;
             elseif (n2==n1)
-                ??
+                Cluster(i,j) = n1;
             end
             
             %% If they are both labelled with different labels,
             %% apply the label min(n1,n2) to the two components
             if (n1~=n2)&&(n1>0)&&(n2>0)
-               ??
+               Cluster(i,j)=min(n1,n2);
             end
             
             %% If they do not belong to any component, assign a new
             %% label to the pixel
             if (n1==0) && (n2==0)
-                ??
+                NewLabel=NewLabel+1;
+               Cluster(i,j)=NewLabel;
             end
             
         end
