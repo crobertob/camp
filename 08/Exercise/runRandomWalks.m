@@ -20,7 +20,7 @@ clc; clear all; close all;
 A = im2double(imread('CTAbdomen.png'));
 
 % Manual are static (from file) seed placement
-isManualSeeding = true;
+isManualSeeding = false;
 
 if(isManualSeeding)
     h = figure; imagesc(A); colormap gray;

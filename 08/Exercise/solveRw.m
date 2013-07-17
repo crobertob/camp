@@ -61,68 +61,58 @@ end
 L = spdiags(temp,0,W);
 
 %%
-% Compute Lu & M
-% Select marked columns from Laplacian to create L_M and B^T
-BT = L(:,seeds);
+% Assemble L_u by selecting rows and columns corresponding to unmarked nodes in the GraphLaplacian
+% Initialize matrix L_u
+L_u=L; 
+% Create temporary array to obtain indices of seeds
+idx_Seed=zeros(size(L,1),1); 
+% Assign 1 to each voxel that has a seed
+idx_Seed(seeds)=1; 
+% Store the index (in this case the row vector) of marked nodes
+idx_Seed=find(idx_Seed);
+% Remove the rows that contain seeds
+L_u(idx_Seed,:)=[];
+% Remove the columns that contain seeds
+L_u(:,idx_Seed)=[];
 
-% Select marked nodes to create BT^T
-idx_U = 1:size(L,1);
-idx_U(seeds) = 0;
-idx_U = find(idx_U); % Index of unmarked nodes
-BT = BT(idx_U,:);
-
-% TODO  Remove marked nodes from Laplacian by deleting rows and cols
-%first remove columns
-Lu=L; %copy Laplacian
-idx_M=zeros(size(L,1),1); %
-idx_M(seeds)=1; %marked nodes
-idx_M=find(idx_M); %Index of marked nodes
-Lu(:,idx_M)=[];%remove nodes column
-Lu(idx_M,:)=[];% remove nodes row
-% Essentially, create Lu
-L = Lu;
-
-% Adjust labels
-label_adjust=min(labels); labels=labels-label_adjust+1; % labels > 0
-
-% Find number of labels (K)
-labels_record(labels)=1; %creates 1 at labels, rest 0
-labels_present=find(labels_record);
-number_labels=length(labels_present);
-
-% TODO-Define M matrix
-M= zeros(length(labels),number_labels);
-for Val=1:length(labels)
-    M(Val,labels(Val))=1;
+% Assemble M by creating a matrix, with one column per label (here 2 columns: label 1 =
+%foreground, label 2 = background ) and one row per seed node. 
+%2 labels so matrix is [size of labels, 2]
+M= zeros(length(labels),2);
+for i=1:length(labels)
+    M(i,labels(i))=1;
 end
+M=sparse(M);
 
-% TODO- Define right-handside of random walks
-rhs= -BT*M; % formel S 40
+% Create B_T by selecting only the columns that contain a seed.
+B_T = L(:,seeds);
+% Then remove nodes that contain a seed.
+idx_No_seed = 1:size(L,1);
+% Assign zero to voxels with seeds
+idx_No_seed(seeds) = 0;
+% Find voxels without seeds
+idx_No_seed = find(idx_No_seed);
+% Only take the rows with no seeds
+B_T = B_T(idx_No_seed,:);
+B_T = sparse(B_T);
 
-rhs = sparse(rhs);
+%Solve the linear system
+x=L_u\(-B_T*M);
 
-% TODO - Solve system of linear equations
-% Hint: At this point all the matrices you need have been defined
-x=L\rhs; % formel S. 40
-
-
-% Prepare output
-probabilities = zeros(size(L,1),number_labels);
-for k=1:number_labels
-    % Probabilities for unmarked nodes
-    probabilities(idx_U,k)=x(:,k);
-    % Max probability for marked node of each label
+% Initialize the probability matrix
+probabilities = zeros(size(L,1),2);
+for k=1:2
+    % Return probabilities for all of the unmarked nodes
+    probabilities(idx_No_seed,k)=x(:,k);
+    % The marked nodes should have a 100% probability
     probabilities(seeds(labels==k),k) = 1.0;
 end
 
-[dummy mask]=max(probabilities,[],2);
-%Assign original labels to mask
-mask=labels_present(mask)+label_adjust-1;
-% reshape indices to image
+% use max to return 1 if column of label 1 (foreground) has the highest probability or
+% 2 if column of label 2 (background) has the highest probability.
+[values mask]=max(probabilities,[],2);
+
+% change from vector to matrix of same shape as A
 mask=reshape(mask,size(A));
-
-% % Final reshape with same size as input image (no padding)
-% probabilities=reshape(probabilities,[size(A,1) size(A,2) number_labels]);
-
 
 end
